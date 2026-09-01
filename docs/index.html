@@ -598,7 +598,7 @@
       <div class="hist-scroll">
         <table class="hist">
           <thead>
-            <tr><th>購入日</th><th>割引率</th><th>単位数</th><th>利用ゲルト</th><th>ゲルト/単位</th><th>薬価換算</th><th>真の購入価格</th><th>薬価差益</th></tr>
+            <tr><th>購入日</th><th>割引率</th><th>単位数</th><th>利用ゲルト</th><th>ゲルト/単位</th><th>薬価換算</th><th>真の購入価格</th><th>薬価差率</th></tr>
           </thead>
           <tbody id="hist-body"></tbody>
         </table>
@@ -1070,8 +1070,8 @@ function render(name) {
   document.getElementById('hist-count').textContent = rows.length;
   const body = document.getElementById('hist-body');
   body.innerHTML = rows.slice().reverse().map(r => {
-    const profit = (r.y !== null && r.y !== undefined && r.p !== null && r.p !== undefined) ? r.y - r.p : null;
-    const profitCls = profit === null ? '' : (profit >= 0 ? ' style="color:var(--tier-std)"' : ' style="color:var(--tier-eco)"');
+    const rate = (r.y && r.p !== null && r.p !== undefined) ? (r.y - r.p) / r.y * 100 : null;
+    const rateCls = rate === null ? '' : (rate >= 0 ? ' style="color:var(--tier-std)"' : ' style="color:var(--tier-eco)"');
     return `
     <tr>
       <td>${r.d || '-'}</td>
@@ -1081,7 +1081,7 @@ function render(name) {
       <td>${r.u ? fmt(r.g / r.u) : '-'}</td>
       <td>${fmt(r.y)}</td>
       <td>${fmt(r.p)}</td>
-      <td${profitCls}>${profit === null ? '-' : fmt(profit) + '円'}</td>
+      <td${rateCls}>${rate === null ? '-' : rate.toFixed(1) + '%'}</td>
     </tr>
   `;
   }).join('');
