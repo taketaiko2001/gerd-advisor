@@ -549,6 +549,7 @@
     </div>
 
     <div id="tag-fallback-note"></div>
+    <div id="recency-note" class="today-summary" style="margin:0"></div>
 
     <div class="tiers">
       <div class="tier" style="--tc:var(--tier-eco)">
@@ -834,6 +835,25 @@ function toKatakana(s) {
   return s.replace(/[ぁ-ゖ]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
 }
 
+// 推奨ゲルトの算定は直近1年の実績を優先する。直近1年のサンプルが少ない
+// 場合のみ、日付が新しい順に過去実績を補って最低限のサンプル数を確保する
+// (古いデータは"補助"であり、主役はあくまで直近1年)。
+const RECENT_DAYS = 365;
+const MIN_RECENT_SAMPLE = 5;
+function selectWithRecency(rowsList) {
+  const now = new Date();
+  const withDate = rowsList.map(r => ({ r, dt: parseDate(r.d) }));
+  const recent = withDate.filter(x => x.dt && (now - x.dt) / 86400000 <= RECENT_DAYS).map(x => x.r);
+  if (recent.length >= MIN_RECENT_SAMPLE) return recent;
+  const recentSet = new Set(recent);
+  const older = withDate
+    .filter(x => x.dt && !recentSet.has(x.r))
+    .sort((a, b) => b.dt - a.dt)
+    .map(x => x.r);
+  const supplemented = recent.concat(older.slice(0, Math.max(0, MIN_RECENT_SAMPLE - recent.length)));
+  return supplemented.length ? supplemented : rowsList;
+}
+
 // ---- search / suggestions ----
 const qInput = document.getElementById('q');
 const qtyInput = document.getElementById('qty');
@@ -944,6 +964,18 @@ function render(name) {
     targetRows = rows;
   } else {
     fallbackNote.innerHTML = '';
+  }
+
+  const beforeRecencyCount = targetRows.length;
+  const recentCount = targetRows.filter(r => { const dt = parseDate(r.d); return dt && (new Date() - dt) / 86400000 <= RECENT_DAYS; }).length;
+  targetRows = selectWithRecency(targetRows);
+  const recencyNote = document.getElementById('recency-note');
+  if (recentCount >= MIN_RECENT_SAMPLE) {
+    recencyNote.textContent = `直近1年の実績${targetRows.length}件をもとに算出しています。`;
+  } else if (targetRows.length > recentCount) {
+    recencyNote.textContent = `直近1年の実績が${recentCount}件と少ないため、過去の実績で補い${targetRows.length}件で算出しています。`;
+  } else {
+    recencyNote.textContent = beforeRecencyCount > 0 ? `実績${targetRows.length}件すべてが直近1年以内です。` : '';
   }
 
   const perUnit = targetRows.filter(r => r.u > 0).map(r => r.g / r.u).sort((a,b) => a-b);
