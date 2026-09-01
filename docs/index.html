@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>ゲルト入札アドバイザー</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #eef1ee;
+    --surface: #ffffff;
+    --surface-alt: #e4e8e2;
+    --ink: #1a2321;
+    --ink-muted: #57635e;
+    --border: #cdd4c9;
+    --accent: #a8721e;
+    --accent-ink: #7a5316;
+    --tier-eco: #6e8f7c;
+    --tier-std: #2f6f63;
+    --tier-safe: #23425c;
+    --warn: #a6472f;
+    --good: #2f7d63;
+    --shadow: 0 1px 2px rgba(26,35,33,0.06), 0 4px 16px rgba(26,35,33,0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #10151a;
+      --surface: #181f24;
+      --surface-alt: #212a2c;
+      --ink: #e7ece7;
+      --ink-muted: #9aa8a1;
+      --border: #313d38;
+      --accent: #ddab5c;
+      --accent-ink: #f0c688;
+      --tier-eco: #8fb39c;
+      --tier-std: #4fa98a;
+      --tier-safe: #7fa9d6;
+      --warn: #d9836a;
+      --good: #4fa98a;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.35);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: var(--surface); }
+
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 24px 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  header.top {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  header.top .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    font-weight: 600;
+  }
+  header.top h1 {
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 32px;
+    margin: 0;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+  header.top .sub {
+    color: var(--ink-muted);
+    font-size: 14.5px;
+    max-width: 62ch;
+  }
+
+  .sync-line {
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    font-family: "IBM Plex Mono", monospace;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sync-line .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--good);
+    flex-shrink: 0;
+  }
+  .sync-line.err .dot { background: var(--warn); }
+  .sync-line.err { color: var(--warn); }
+  .sync-line a { color: inherit; }
+
+  .statbar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .statbar .cell {
+    background: var(--surface);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .statbar .cell .v {
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 19px;
+    font-weight: 600;
+  }
+  .statbar .cell .k {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .search-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+  .search-panel label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+  }
+  .search-row {
+    display: flex;
+    gap: 10px;
+  }
+  #q {
+    flex: 1;
+    font-size: 16px;
+    padding: 11px 14px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+  #q:focus { border-color: var(--accent); }
+  #q:disabled { opacity: 0.6; }
+  .qty-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 0 6px 0 12px;
+    white-space: nowrap;
+  }
+  .qty-box span { font-size: 12.5px; color: var(--ink-muted); }
+  #qty {
+    width: 64px;
+    font-size: 16px;
+    padding: 10px 4px;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    outline: none;
+  }
+
+  .tag-select {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .tag-select-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+  .tag-options { display: flex; gap: 8px; }
+  .tag-btn {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all .12s ease;
+  }
+  .tag-btn:hover { border-color: var(--accent); }
+  .tag-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--surface);
+  }
+  .tag-btn .n {
+    font-size: 10.5px;
+    opacity: 0.75;
+    margin-left: 4px;
+  }
+
+  .suggestions {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    top: 100%;
+    margin-top: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 10;
+    display: none;
+  }
+  .suggestions.open { display: block; }
+  .suggestions .item {
+    padding: 10px 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border);
+  }
+  .suggestions .item:last-child { border-bottom: none; }
+  .suggestions .item:hover, .suggestions .item.active {
+    background: var(--surface-alt);
+  }
+  .suggestions .item .name { font-size: 14.5px; }
+  .suggestions .item .meta {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    font-family: "IBM Plex Mono", monospace;
+    white-space: nowrap;
+  }
+  .suggestions .empty {
+    padding: 16px 14px;
+    color: var(--ink-muted);
+    font-size: 13.5px;
+  }
+
+  .result { display: none; flex-direction: column; gap: 20px; }
+  .result.open { display: flex; }
+
+  .drug-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 24px;
+    box-shadow: var(--shadow);
+  }
+  .drug-card .name {
+    font-family: "Fraunces", serif;
+    font-size: 24px;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  .drug-card .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--ink-muted);
+  }
+  .drug-card .meta-row b { color: var(--ink); font-weight: 600; }
+
+  .flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 7px 12px;
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--warn) 14%, var(--surface));
+    color: var(--warn);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .tier {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--tc);
+    border-radius: 8px;
+    padding: 16px 18px 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .tier .label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--tc);
+    text-transform: uppercase;
+  }
+  .tier .num {
+    font-family: "Fraunces", serif;
+    font-size: 30px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    margin-top: 2px;
+  }
+  .tier .num .unit { font-size: 15px; font-weight: 500; color: var(--ink-muted); margin-left: 3px; font-family: "IBM Plex Sans JP", sans-serif; }
+  .tier .desc { font-size: 12.5px; color: var(--ink-muted); margin-top: 4px; line-height: 1.5; }
+  .tier .profit {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tier .profit b { color: var(--good); font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 22px 22px;
+    box-shadow: var(--shadow);
+  }
+  .today-summary {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+  }
+  .today-summary b { color: var(--ink); font-family: "IBM Plex Mono", monospace; }
+  .fb-note { font-size: 10px; color: var(--warn); margin-left: 4px; }
+  #today-panel .today-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  #today-panel .today-header h2 { margin: 0; }
+  .refresh-btn {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--accent);
+    background: var(--accent);
+    color: var(--surface);
+    cursor: pointer;
+    transition: opacity .12s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .refresh-btn:hover { opacity: 0.85; }
+  .refresh-btn:disabled { opacity: 0.5; cursor: default; }
+  .bid-check {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .drug-link {
+    cursor: pointer;
+    color: var(--accent-ink);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent-ink) 40%, transparent);
+    text-underline-offset: 2px;
+  }
+  .drug-link:hover { text-decoration-color: var(--accent-ink); }
+  .panel h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 14px;
+  }
+
+  .trend-row { display: flex; gap: 20px; align-items: center; }
+  .trend-row canvas { flex-shrink: 0; }
+  .trend-copy { font-size: 13.5px; color: var(--ink-muted); }
+  .trend-copy .delta { font-weight: 700; font-family: "IBM Plex Mono", monospace; }
+  .trend-copy .delta.up { color: var(--warn); }
+  .trend-copy .delta.down { color: var(--good); }
+
+  table.hist {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .hist-scroll { overflow-x: auto; }
+  table.hist th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding: 6px 10px;
+    border-bottom: 1.5px solid var(--border);
+    white-space: nowrap;
+  }
+  table.hist td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  table.hist td.name-cell { font-family: "IBM Plex Sans JP", sans-serif; }
+  table.hist tr:last-child td { border-bottom: none; }
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--surface-alt);
+    color: var(--ink-muted);
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--ink-muted);
+    font-size: 14px;
+    padding: 40px 20px;
+  }
+
+  footer.note {
+    font-size: 12px;
+    color: var(--ink-muted);
+    text-align: center;
+    padding-top: 8px;
+  }
+
+  @media (max-width: 640px) {
+    .tiers { grid-template-columns: 1fr; }
+    .statbar { grid-template-columns: repeat(2, 1fr); }
+    .search-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Revival Drug &middot; 自社購入履歴分析</div>
+    <h1>ゲルト入札アドバイザー</h1>
+    <div class="sub">過去に購入した医薬品名を入力し、出品されている割引率タグ(30/40/50/70%)を選ぶと、その条件に絞った過去実績から目安の入札ゲルト数を算出します。割引率タグによって必要なゲルト数は大きく異なるため、必ずタグを合わせてご確認ください。</div>
+    <div class="sync-line" id="sync-status"><span class="dot"></span><span id="sync-text">読み込み中...</span></div>
+  </header>
+
+  <div class="statbar" id="statbar"></div>
+
+  <div class="panel" id="today-panel">
+    <div class="today-header">
+      <h2>本日の出品との一致(<span id="today-time"></span>取得)</h2>
+      <button type="button" id="refresh-btn" class="refresh-btn">更新</button>
+    </div>
+    <div id="today-summary" class="today-summary"></div>
+    <div class="hist-scroll" id="today-table-wrap">
+      <table class="hist" id="today-table">
+        <thead>
+          <tr><th></th><th>薬品名</th><th>使用期限</th><th>数量</th><th>割引率</th><th>入札件数</th><th>標準</th><th>想定差益率</th></tr>
+        </thead>
+        <tbody id="today-body"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="today-inline-empty" style="display:none;padding:20px 0"></div>
+  </div>
+
+  <div class="panel" id="bid-list-panel" style="display:none">
+    <div class="today-header">
+      <h2>入札予定リスト(<span id="bid-list-count">0</span>件)</h2>
+      <button type="button" id="copy-list-btn" class="refresh-btn">コピー</button>
+    </div>
+    <div class="today-summary">チェックを入れた医薬品の一覧です。実際の入札はこのサイトでは行わず、下記を参考にリバイバルドラッグのサイトでご自身で入札してください。</div>
+    <div class="hist-scroll">
+      <table class="hist" id="bid-list-table">
+        <thead>
+          <tr><th>薬品名</th><th>数量</th><th>標準ゲルト</th><th>想定差益率</th></tr>
+        </thead>
+        <tbody id="bid-list-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="search-panel">
+    <label for="q">薬品名を入力(部分一致可)</label>
+    <div class="search-row">
+      <input type="text" id="q" placeholder="例: ネイリン / ねいりん、コレクチム、T-072 など(ひらがな可)" autocomplete="off" disabled>
+      <div class="qty-box"><span>購入単位数</span><input type="number" id="qty" min="1" value="1"></div>
+    </div>
+    <div class="suggestions" id="suggestions"></div>
+    <div class="tag-select" id="tag-select" style="display:none">
+      <span class="tag-select-label">出品されている割引率タグ</span>
+      <div class="tag-options" id="tag-options"></div>
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="drug-card">
+      <div class="name" id="r-name">-</div>
+      <div class="meta-row" id="r-meta"></div>
+      <div id="r-flag"></div>
+    </div>
+
+    <div id="tag-fallback-note"></div>
+
+    <div class="tiers">
+      <div class="tier" style="--tc:var(--tier-eco)">
+        <div class="label">経済重視</div>
+        <div class="num" id="t-eco">-</div>
+        <div class="desc">同条件の過去実績の下位25%水準。競合が少なかった回の入札額に相当し、コストは抑えられますが競り負ける可能性もやや高めです。</div>
+        <div class="profit" id="p-eco"></div>
+      </div>
+      <div class="tier" style="--tc:var(--tier-std)">
+        <div class="label">標準</div>
+        <div class="num" id="t-std">-</div>
+        <div class="desc">同条件の過去の入札実績の中央値。最も典型的な落札水準の目安です。</div>
+        <div class="profit" id="p-std"></div>
+      </div>
+      <div class="tier" style="--tc:var(--tier-safe)">
+        <div class="label">堅実重視</div>
+        <div class="num" id="t-safe">-</div>
+        <div class="desc">同条件の過去実績の上位25%水準。これまでの傾向ではほぼ確実に競り勝てていた入札額です。</div>
+        <div class="profit" id="p-safe"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>割引率タグ別の実績比較(この商品のみ)</h2>
+      <div class="hist-scroll">
+        <table class="hist" id="tag-breakdown-table">
+          <thead>
+            <tr><th>割引率タグ</th><th>件数</th><th>ゲルト/単位(中央値)</th><th>ゲルト/単位(範囲)</th><th>参考: 真の購入価格÷薬価換算</th></tr>
+          </thead>
+          <tbody id="tag-breakdown-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>直近トレンド</h2>
+      <div class="trend-row">
+        <canvas id="spark" width="280" height="64"></canvas>
+        <div class="trend-copy" id="trend-copy"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>過去の購入履歴(<span id="hist-count"></span>件)</h2>
+      <div class="hist-scroll">
+        <table class="hist">
+          <thead>
+            <tr><th>購入日</th><th>割引率</th><th>単位数</th><th>利用ゲルト</th><th>ゲルト/単位</th><th>薬価換算</th><th>真の購入価格</th></tr>
+          </thead>
+          <tbody id="hist-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" id="empty-state">データを読み込んでいます...</div>
+
+  <footer class="note">分析対象データ: 自社の購入履歴のみ(他社の入札情報は含みません) &middot; データはGitHub上の本リポジトリから毎回ライブ取得しており、更新操作は不要です</footer>
+</div>
+
+<script>
+const OWNER = 'taketaiko2001';
+const REPO = 'gerd-advisor';
+const BRANCH = 'main';
+function rawUrl(path) {
+  return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${path}?_=${Date.now()}`;
+}
+
+let DATA = [];
+let TODAY = [];
+let TODAY_FETCHED_AT = null;
+let uniqueNames = [];
+let firstLoadDone = false;
+
+async function fetchJSON(path) {
+  const res = await fetch(rawUrl(path), { cache: 'no-store' });
+  if (!res.ok) throw new Error('fetch failed: ' + path + ' (' + res.status + ')');
+  return res.json();
+}
+
+function nowLabel() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+function setSyncStatus(text, isErr) {
+  const el = document.getElementById('sync-status');
+  document.getElementById('sync-text').textContent = text;
+  el.classList.toggle('err', !!isErr);
+}
+
+async function loadAll(isManual) {
+  const refreshBtn = document.getElementById('refresh-btn');
+  if (isManual) { refreshBtn.disabled = true; refreshBtn.textContent = '取得中...'; }
+  setSyncStatus('読み込み中...');
+  try {
+    const [gerdData, todayData] = await Promise.all([
+      fetchJSON('docs/data/gerd_data.json'),
+      fetchJSON('docs/data/today.json'),
+    ]);
+    DATA = gerdData;
+    TODAY = todayData.matches || [];
+    TODAY_FETCHED_AT = todayData.fetched_at || null;
+    uniqueNames = [...new Set(DATA.map(d => d.n))].sort();
+    document.getElementById('q').disabled = false;
+    if (!firstLoadDone) {
+      document.getElementById('empty-state').textContent = '薬品名を入力すると、推奨ゲルト数がここに表示されます。';
+      firstLoadDone = true;
+    }
+    renderStatbar();
+    renderToday();
+    if (qInput.dataset.selected) render(qInput.dataset.selected);
+    setSyncStatus(`同期済み ${nowLabel()}`);
+  } catch (e) {
+    setSyncStatus('データの取得に失敗しました(オフラインの可能性があります)。電波の良い場所で「更新」をお試しください。', true);
+  } finally {
+    if (isManual) { refreshBtn.disabled = false; refreshBtn.textContent = '更新'; }
+  }
+}
+
+function renderStatbar() {
+  const dates = DATA.map(d => d.d).filter(Boolean).sort();
+  const statbar = document.getElementById('statbar');
+  statbar.innerHTML = `
+    <div class="cell"><div class="v">${DATA.length.toLocaleString()}</div><div class="k">入札実績件数</div></div>
+    <div class="cell"><div class="v">${uniqueNames.length}</div><div class="k">品目数</div></div>
+    <div class="cell"><div class="v">${dates[0] || '-'}</div><div class="k">データ開始</div></div>
+    <div class="cell"><div class="v">${dates[dates.length-1] || '-'}</div><div class="k">データ最終</div></div>
+  `;
+}
+
+// 入札予定リストのチェック状態(この端末のブラウザ内にのみ保存。実際の入札は行わない)
+const CHECKLIST_KEY = 'gerdAdvisorChecklist';
+function loadChecklist() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]'));
+  } catch (e) {
+    return new Set();
+  }
+}
+function saveChecklist(set) {
+  try {
+    localStorage.setItem(CHECKLIST_KEY, JSON.stringify([...set]));
+  } catch (e) {
+    // 保存できなくても致命的ではないため無視する
+  }
+}
+let checkedDrugs = loadChecklist();
+
+function renderBidList() {
+  const panel = document.getElementById('bid-list-panel');
+  const body = document.getElementById('bid-list-body');
+  const items = TODAY.filter(r => checkedDrugs.has(r.name));
+  document.getElementById('bid-list-count').textContent = items.length;
+  if (items.length === 0) {
+    panel.style.display = 'none';
+    body.innerHTML = '';
+    return;
+  }
+  panel.style.display = 'block';
+  body.innerHTML = items.map(r => `
+    <tr>
+      <td class="name-cell">${r.name}</td>
+      <td>${r.qty != null ? fmt(r.qty) : '-'}</td>
+      <td>${fmt(r.std)}</td>
+      <td>${r.std_rate != null ? (r.std_rate * 100).toFixed(1) + '%' : '-'}</td>
+    </tr>
+  `).join('');
+}
+
+const copyListBtn = document.getElementById('copy-list-btn');
+copyListBtn.addEventListener('click', () => {
+  const items = TODAY.filter(r => checkedDrugs.has(r.name));
+  const text = items.map(r =>
+    `${r.name}\t数量${fmt(r.qty)}\t標準ゲルト${fmt(r.std)}\t想定差益率${r.std_rate != null ? (r.std_rate * 100).toFixed(1) + '%' : '-'}`
+  ).join('\n');
+  const origLabel = copyListBtn.textContent;
+  navigator.clipboard?.writeText(text).then(() => {
+    copyListBtn.textContent = 'コピーしました';
+    setTimeout(() => { copyListBtn.textContent = origLabel; }, 1500);
+  }).catch(() => {
+    alert('コピーに失敗しました。お使いのブラウザがクリップボード操作に対応していない可能性があります。');
+  });
+});
+
+function renderToday() {
+  const tableWrap = document.getElementById('today-table-wrap');
+  const inlineEmpty = document.getElementById('today-inline-empty');
+  document.getElementById('today-time').textContent = TODAY_FETCHED_AT ? `${TODAY_FETCHED_AT} ` : '未取得 ';
+
+  if (!TODAY || TODAY.length === 0) {
+    tableWrap.style.display = 'none';
+    inlineEmpty.style.display = 'block';
+    inlineEmpty.textContent = '本日の出品の中に、過去購入履歴のある薬品はまだ見つかっていません。';
+    document.getElementById('today-summary').innerHTML = '';
+    document.getElementById('today-body').innerHTML = '';
+    renderBidList();
+    return;
+  }
+  inlineEmpty.style.display = 'none';
+  tableWrap.style.display = 'block';
+
+  const matched = TODAY.length;
+  document.getElementById('today-summary').innerHTML =
+    `本日出品されている商品のうち、過去に購入実績のある薬品は <b>${matched}件</b> でした。`;
+
+  const rows = TODAY.slice().sort((a, b) => (b.std_rate ?? -1) - (a.std_rate ?? -1));
+  document.getElementById('today-body').innerHTML = rows.map((r, i) => `
+    <tr>
+      <td><input type="checkbox" class="bid-check" data-idx="${i}"></td>
+      <td class="name-cell"><span class="drug-link" data-idx="${i}">${r.name}</span>${r.fallback ? '<span class="fb-note">(全体実績)</span>' : ''}</td>
+      <td>${r.expiry || '-'}</td>
+      <td>${r.qty != null ? fmt(r.qty) : '-'}</td>
+      <td><span class="tag">${r.disc != null ? r.disc + '%' : '-'}</span></td>
+      <td>${r.bid_cnt != null ? r.bid_cnt : '-'}</td>
+      <td>${fmt(r.std)}</td>
+      <td>${r.std_rate != null ? (r.std_rate * 100).toFixed(1) + '%' : '-'}</td>
+    </tr>
+  `).join('');
+  document.getElementById('today-body').querySelectorAll('.drug-link').forEach(el => {
+    el.addEventListener('click', () => {
+      const r = rows[+el.dataset.idx];
+      selectDrug(r.name);
+      document.querySelector('.search-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  document.getElementById('today-body').querySelectorAll('.bid-check').forEach(el => {
+    const r = rows[+el.dataset.idx];
+    el.checked = checkedDrugs.has(r.name);
+    el.addEventListener('change', () => {
+      if (el.checked) checkedDrugs.add(r.name); else checkedDrugs.delete(r.name);
+      saveChecklist(checkedDrugs);
+      renderBidList();
+    });
+  });
+  renderBidList();
+}
+
+document.getElementById('refresh-btn').addEventListener('click', () => loadAll(true));
+
+// フォアグラウンド復帰時に自動で再取得(スマホでアプリ切り替えから戻った時など)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') loadAll(false);
+});
+// 5分おきにバックグラウンド再取得
+setInterval(() => loadAll(false), 5 * 60 * 1000);
+
+function parseDate(s) {
+  if (!s) return null;
+  const m = s.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+  if (!m) return null;
+  return new Date(+m[1], +m[2]-1, +m[3]);
+}
+
+function quantile(sorted, p) {
+  if (sorted.length === 0) return null;
+  if (sorted.length === 1) return sorted[0];
+  const idx = p * (sorted.length - 1);
+  const lo = Math.floor(idx), hi = Math.ceil(idx);
+  if (lo === hi) return sorted[lo];
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo);
+}
+
+function fmt(n) {
+  if (n === null || n === undefined || isNaN(n)) return '-';
+  return Math.round(n).toLocaleString();
+}
+
+// interpolated value of `field` at rank-position p, using the SAME ordering
+// (sortedRows) as the gerd/unit quantile so profit figures line up with
+// the actual transactions near that spend level, not an independent quantile.
+function pairedQuantile(sortedRows, field, p) {
+  if (sortedRows.length === 0) return null;
+  if (sortedRows.length === 1) return sortedRows[0][field];
+  const idx = p * (sortedRows.length - 1);
+  const lo = Math.floor(idx), hi = Math.ceil(idx);
+  if (lo === hi) return sortedRows[lo][field];
+  return sortedRows[lo][field] + (sortedRows[hi][field] - sortedRows[lo][field]) * (idx - lo);
+}
+
+function toKatakana(s) {
+  return s.replace(/[ぁ-ゖ]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
+}
+
+// ---- search / suggestions ----
+const qInput = document.getElementById('q');
+const qtyInput = document.getElementById('qty');
+const sugBox = document.getElementById('suggestions');
+let activeIdx = -1;
+let currentMatches = [];
+
+function countFor(name) {
+  return DATA.filter(d => d.n === name).length;
+}
+
+function renderSuggestions(term) {
+  const t = toKatakana(term.trim());
+  if (!t) { sugBox.classList.remove('open'); return; }
+  const matches = uniqueNames.filter(n => n.includes(t)).slice(0, 12);
+  currentMatches = matches;
+  activeIdx = -1;
+  if (matches.length === 0) {
+    sugBox.innerHTML = `<div class="empty">一致する購入履歴が見つかりません</div>`;
+  } else {
+    sugBox.innerHTML = matches.map((n, i) => `
+      <div class="item" data-idx="${i}">
+        <span class="name">${n}</span>
+        <span class="meta">実績${countFor(n)}件</span>
+      </div>
+    `).join('');
+  }
+  sugBox.classList.add('open');
+}
+
+qInput.addEventListener('input', () => renderSuggestions(qInput.value));
+qInput.addEventListener('focus', () => { if (qInput.value.trim()) renderSuggestions(qInput.value); });
+document.addEventListener('click', (e) => {
+  if (!sugBox.contains(e.target) && e.target !== qInput) sugBox.classList.remove('open');
+});
+sugBox.addEventListener('click', (e) => {
+  const item = e.target.closest('.item');
+  if (!item) return;
+  const idx = +item.dataset.idx;
+  selectDrug(currentMatches[idx]);
+});
+qInput.addEventListener('keydown', (e) => {
+  if (!sugBox.classList.contains('open') || currentMatches.length === 0) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx+1, currentMatches.length-1); highlight(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx-1, 0); highlight(); }
+  else if (e.key === 'Enter') { e.preventDefault(); if (activeIdx >= 0) selectDrug(currentMatches[activeIdx]); else if (currentMatches.length===1) selectDrug(currentMatches[0]); }
+  else if (e.key === 'Escape') { sugBox.classList.remove('open'); }
+});
+function highlight() {
+  [...sugBox.querySelectorAll('.item')].forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+}
+
+qtyInput.addEventListener('input', () => { if (qInput.dataset.selected) render(qInput.dataset.selected); });
+
+let selectedTag = null; // null = 全体(タグ指定なし)
+
+function selectDrug(name) {
+  qInput.value = name;
+  qInput.dataset.selected = name;
+  sugBox.classList.remove('open');
+  selectedTag = null;
+  render(name);
+}
+
+function renderTagOptions(baseRows) {
+  const tagBox = document.getElementById('tag-select');
+  const opts = document.getElementById('tag-options');
+  const tags = [...new Set(baseRows.map(r => r.disc).filter(t => t !== null && t !== undefined))].sort((a,b) => a-b);
+  if (tags.length === 0) { tagBox.style.display = 'none'; return; }
+  tagBox.style.display = 'flex';
+  const buttons = [`<button type="button" class="tag-btn ${selectedTag===null?'active':''}" data-tag="">全体<span class="n">${baseRows.length}件</span></button>`]
+    .concat(tags.map(t => {
+      const n = baseRows.filter(r => r.disc === t).length;
+      return `<button type="button" class="tag-btn ${selectedTag===t?'active':''}" data-tag="${t}">${t}%<span class="n">${n}件</span></button>`;
+    }));
+  opts.innerHTML = buttons.join('');
+  [...opts.querySelectorAll('.tag-btn')].forEach(btn => {
+    btn.addEventListener('click', () => {
+      const v = btn.dataset.tag;
+      selectedTag = v === '' ? null : +v;
+      render(qInput.dataset.selected);
+    });
+  });
+}
+
+function render(name) {
+  const rows = DATA.filter(d => d.n === name).sort((a,b) => (parseDate(a.d)||0) - (parseDate(b.d)||0));
+  if (rows.length === 0) {
+    document.getElementById('result').classList.remove('open');
+    document.getElementById('tag-select').style.display = 'none';
+    document.getElementById('empty-state').style.display = 'block';
+    document.getElementById('empty-state').textContent = '過去の購入履歴が見つかりません。薬品名の表記(規格・％表記など)をご確認ください。';
+    return;
+  }
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('result').classList.add('open');
+  renderTagOptions(rows);
+
+  const mk = rows[rows.length-1].mk || '-';
+  document.getElementById('r-name').textContent = name;
+
+  const qty = Math.max(1, +qtyInput.value || 1);
+
+  let targetRows = selectedTag === null ? rows : rows.filter(r => r.disc === selectedTag);
+  const fallbackNote = document.getElementById('tag-fallback-note');
+  if (selectedTag !== null && targetRows.length === 0) {
+    fallbackNote.innerHTML = `<div class="flag">この商品は割引率タグ${selectedTag}%での購入実績がありません。以下は全体の実績を表示しています。</div>`;
+    targetRows = rows;
+  } else {
+    fallbackNote.innerHTML = '';
+  }
+
+  const perUnit = targetRows.filter(r => r.u > 0).map(r => r.g / r.u).sort((a,b) => a-b);
+  const sampleN = perUnit.length;
+
+  const eco = quantile(perUnit, 0.25);
+  const std = quantile(perUnit, 0.50);
+  const safe = quantile(perUnit, 0.75);
+
+  document.getElementById('r-meta').innerHTML = `
+    <span>メーカー: <b>${mk}</b></span>
+    <span>購入実績: <b>${rows.length}件</b>${selectedTag!==null ? `(うちタグ${selectedTag}%: <b>${targetRows.length}件</b>)` : ''}</span>
+    <span>最終購入: <b>${rows[rows.length-1].d || '-'}</b></span>
+    <span>直近割引率タグ: <b>${rows[rows.length-1].disc ?? '-'}%</b></span>
+  `;
+
+  const flagBox = document.getElementById('r-flag');
+  if (sampleN < 3) {
+    flagBox.innerHTML = `<div class="flag">サンプル数が少なく(${sampleN}件)、参考値としての精度は限定的です</div>`;
+  } else {
+    flagBox.innerHTML = '';
+  }
+
+  document.getElementById('t-eco').innerHTML = `${fmt(eco*qty)}<span class="unit">ゲルト</span>`;
+  document.getElementById('t-std').innerHTML = `${fmt(std*qty)}<span class="unit">ゲルト</span>`;
+  document.getElementById('t-safe').innerHTML = `${fmt(safe*qty)}<span class="unit">ゲルト</span>`;
+
+  // 真の薬価差益(想定): 同じ条件の実績を入札ゲルト水準(gu)順に並べ、
+  // その並び順のまま差益額/差益率を補間する(gu単独ではなく実際の取引に紐づいた値を使う)
+  const joint = targetRows
+    .filter(r => r.u > 0 && r.y > 0 && r.p !== null && r.p !== undefined)
+    .map(r => ({ gu: r.g / r.u, profitPerUnit: (r.y - r.p) / r.u, profitRate: (r.y - r.p) / r.y }))
+    .sort((a, b) => a.gu - b.gu);
+
+  function renderProfit(elId, p) {
+    const el = document.getElementById(elId);
+    if (joint.length === 0) { el.innerHTML = ''; return; }
+    const amount = pairedQuantile(joint, 'profitPerUnit', p) * qty;
+    const rate = pairedQuantile(joint, 'profitRate', p) * 100;
+    const sign = amount >= 0 ? '' : '−';
+    el.innerHTML = `<div>想定差益額: <b>${sign}¥${fmt(Math.abs(amount))}</b></div><div>想定差益率(対薬価): <b>${rate.toFixed(1)}%</b></div>`;
+  }
+  renderProfit('p-eco', 0.25);
+  renderProfit('p-std', 0.50);
+  renderProfit('p-safe', 0.75);
+
+  // per-tag breakdown table (always across the whole product, for comparison)
+  const tagBody = document.getElementById('tag-breakdown-body');
+  const tagsAll = [...new Set(rows.map(r => r.disc).filter(t => t !== null && t !== undefined))].sort((a,b) => a-b);
+  tagBody.innerHTML = tagsAll.map(t => {
+    const trows = rows.filter(r => r.disc === t);
+    const tpu = trows.filter(r => r.u > 0).map(r => r.g / r.u).sort((a,b) => a-b);
+    const med = quantile(tpu, 0.5);
+    const lo = tpu.length ? tpu[0] : null, hi = tpu.length ? tpu[tpu.length-1] : null;
+    const ratios = trows.filter(r => r.y > 0 && r.p !== null && r.p !== undefined).map(r => r.p / r.y);
+    const avgRatio = ratios.length ? ratios.reduce((a,b)=>a+b,0) / ratios.length : null;
+    const isSelected = selectedTag === t;
+    return `<tr${isSelected ? ' style="background:var(--surface-alt)"' : ''}>
+      <td><span class="tag">${t}%</span></td>
+      <td>${trows.length}</td>
+      <td>${fmt(med)}</td>
+      <td>${lo!==null ? `${fmt(lo)} 〜 ${fmt(hi)}` : '-'}</td>
+      <td>${avgRatio!==null ? (avgRatio*100).toFixed(0)+'%' : '-'}</td>
+    </tr>`;
+  }).join('');
+
+  // trend: compare recent half vs earlier half (per-unit gerd, chronological), within target tag if possible
+  const trendSource = targetRows.length >= 3 ? targetRows : rows;
+  const chronoPerUnit = trendSource.slice().sort((a,b) => (parseDate(a.d)||0) - (parseDate(b.d)||0))
+    .filter(r => r.u > 0).map(r => ({ d: parseDate(r.d), v: r.g / r.u })).filter(x => x.d);
+  drawSpark(chronoPerUnit.map(x => x.v));
+  const tc = document.getElementById('trend-copy');
+  if (chronoPerUnit.length >= 4) {
+    const half = Math.floor(chronoPerUnit.length / 2);
+    const older = chronoPerUnit.slice(0, half).map(x => x.v);
+    const recent = chronoPerUnit.slice(half).map(x => x.v);
+    const avg = arr => arr.reduce((a,b)=>a+b,0) / arr.length;
+    const oldAvg = avg(older), newAvg = avg(recent);
+    const diff = oldAvg === 0 ? null : (newAvg - oldAvg) / oldAvg * 100;
+    if (diff === null) {
+      tc.innerHTML = `直近の1単位あたり平均ゲルトは ${fmt(newAvg)}`;
+    } else {
+      const dir = diff >= 0 ? 'up' : 'down';
+      const arrow = diff >= 0 ? '&#9650;' : '&#9660;';
+      tc.innerHTML = `直近の1単位あたり平均ゲルトは <b>${fmt(newAvg)}</b>(以前比 <span class="delta ${dir}">${arrow} ${Math.abs(diff).toFixed(0)}%</span>)`;
+    }
+  } else {
+    tc.textContent = 'トレンドを判定するには実績が不足しています。';
+  }
+
+  document.getElementById('hist-count').textContent = rows.length;
+  const body = document.getElementById('hist-body');
+  body.innerHTML = rows.slice().reverse().map(r => `
+    <tr>
+      <td>${r.d || '-'}</td>
+      <td><span class="tag">${r.disc ?? '-'}%</span></td>
+      <td>${fmt(r.u)}</td>
+      <td>${fmt(r.g)}</td>
+      <td>${r.u ? fmt(r.g / r.u) : '-'}</td>
+      <td>${fmt(r.y)}</td>
+      <td>${fmt(r.p)}</td>
+    </tr>
+  `).join('');
+}
+
+function drawSpark(values) {
+  const canvas = document.getElementById('spark');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  const styles = getComputedStyle(document.documentElement);
+  const accent = styles.getPropertyValue('--tier-std').trim() || '#2f6f63';
+  const border = styles.getPropertyValue('--border').trim() || '#ccc';
+
+  // faint grid
+  ctx.strokeStyle = border;
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 2; i++) {
+    const y = 6 + (H - 12) * (i / 2);
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.globalAlpha = 0.5;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  if (values.length < 2) return;
+  const max = Math.max(...values), min = Math.min(...values);
+  const range = max - min || 1;
+  const pad = 6;
+  const pts = values.map((v, i) => ({
+    x: pad + (W - pad*2) * (i / (values.length - 1)),
+    y: pad + (H - pad*2) * (1 - (v - min) / range)
+  }));
+
+  // area fill
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, accent + '55');
+  grad.addColorStop(1, accent + '00');
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, H - pad);
+  pts.forEach(p => ctx.lineTo(p.x, p.y));
+  ctx.lineTo(pts[pts.length-1].x, H - pad);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // line
+  ctx.beginPath();
+  pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // emphasized endpoint
+  const last = pts[pts.length-1];
+  ctx.beginPath();
+  ctx.arc(last.x, last.y, 3.5, 0, Math.PI*2);
+  ctx.fillStyle = accent;
+  ctx.fill();
+}
+
+loadAll(false);
+</script>
+</body>
+</html>
