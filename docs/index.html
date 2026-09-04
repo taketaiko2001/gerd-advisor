@@ -172,67 +172,6 @@
   }
   #q:focus { border-color: var(--accent); }
   #q:disabled { opacity: 0.6; }
-  .qty-box {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: 6px;
-    padding: 0 6px 0 12px;
-    white-space: nowrap;
-  }
-  .qty-box span { font-size: 12.5px; color: var(--ink-muted); }
-  #qty {
-    width: 64px;
-    font-size: 16px;
-    padding: 10px 4px;
-    border: none;
-    background: transparent;
-    color: var(--ink);
-    font-family: "IBM Plex Mono", monospace;
-    font-variant-numeric: tabular-nums;
-    outline: none;
-  }
-
-  .tag-select {
-    margin-top: 14px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-  }
-  .tag-select-label {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--ink-muted);
-  }
-  .tag-options { display: flex; gap: 8px; }
-  .tag-btn {
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 13.5px;
-    font-weight: 600;
-    padding: 7px 14px;
-    border-radius: 20px;
-    border: 1.5px solid var(--border);
-    background: var(--bg);
-    color: var(--ink-muted);
-    cursor: pointer;
-    transition: all .12s ease;
-  }
-  .tag-btn:hover { border-color: var(--accent); }
-  .tag-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--surface);
-  }
-  .tag-btn .n {
-    font-size: 10.5px;
-    opacity: 0.75;
-    margin-left: 4px;
-  }
 
   .suggestions {
     position: absolute;
@@ -302,64 +241,6 @@
   }
   .drug-card .meta-row b { color: var(--ink); font-weight: 600; }
 
-  .flag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 12px;
-    padding: 7px 12px;
-    border-radius: 5px;
-    background: color-mix(in srgb, var(--warn) 14%, var(--surface));
-    color: var(--warn);
-    font-size: 12.5px;
-    font-weight: 600;
-  }
-
-  .tiers {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-  .tier {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--tc);
-    border-radius: 8px;
-    padding: 16px 18px 18px;
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .tier .label {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    color: var(--tc);
-    text-transform: uppercase;
-  }
-  .tier .num {
-    font-family: "Fraunces", serif;
-    font-size: 30px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.01em;
-    margin-top: 2px;
-  }
-  .tier .num .unit { font-size: 15px; font-weight: 500; color: var(--ink-muted); margin-left: 3px; font-family: "IBM Plex Sans JP", sans-serif; }
-  .tier .desc { font-size: 12.5px; color: var(--ink-muted); margin-top: 4px; line-height: 1.5; }
-  .tier .profit {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px dashed var(--border);
-    font-size: 12.5px;
-    color: var(--ink-muted);
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .tier .profit b { color: var(--good); font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
-
   .panel {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -398,12 +279,6 @@
   }
   .refresh-btn:hover { opacity: 0.85; }
   .refresh-btn:disabled { opacity: 0.5; cursor: default; }
-  .bid-check {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--accent);
-    cursor: pointer;
-  }
   .drug-link {
     cursor: pointer;
     color: var(--accent-ink);
@@ -420,13 +295,6 @@
     color: var(--ink-muted);
     margin: 0 0 14px;
   }
-
-  .trend-row { display: flex; gap: 20px; align-items: center; }
-  .trend-row canvas { flex-shrink: 0; }
-  .trend-copy { font-size: 13.5px; color: var(--ink-muted); }
-  .trend-copy .delta { font-weight: 700; font-family: "IBM Plex Mono", monospace; }
-  .trend-copy .delta.up { color: var(--warn); }
-  .trend-copy .delta.down { color: var(--good); }
 
   table.hist {
     width: 100%;
@@ -478,7 +346,6 @@
   }
 
   @media (max-width: 640px) {
-    .tiers { grid-template-columns: 1fr; }
     .statbar { grid-template-columns: repeat(2, 1fr); }
     .search-row { flex-direction: column; }
   }
@@ -489,7 +356,7 @@
   <header class="top">
     <div class="eyebrow">Revival Drug &middot; 自社購入履歴分析</div>
     <h1>ゲルト入札アドバイザー</h1>
-    <div class="sub">過去に購入した医薬品名を入力し、出品されている割引率タグ(30/40/50/70%)を選ぶと、その条件に絞った過去実績から目安の入札ゲルト数を算出します。割引率タグによって必要なゲルト数は大きく異なるため、必ずタグを合わせてご確認ください。</div>
+    <div class="sub">過去に購入した医薬品名を入力すると、その医薬品の過去の購入履歴を確認できます。本日出品されている商品のうち、過去に購入実績のある品目は下の一覧でも確認できます。</div>
     <div class="sync-line" id="sync-status"><span class="dot"></span><span id="sync-text">読み込み中...</span></div>
     <div style="font-size:11px;color:var(--ink-muted)">※データ更新後、GitHub側の反映に最大5分ほど時間差が生じる場合があります(このページは自動で再取得するため、少し待てば反映されます)</div>
   </header>
@@ -505,7 +372,7 @@
     <div class="hist-scroll" id="today-table-wrap">
       <table class="hist" id="today-table">
         <thead>
-          <tr><th></th><th>薬品名</th><th>使用期限</th><th>数量</th><th>割引率</th><th>入札件数</th><th>標準</th><th>想定差益率</th></tr>
+          <tr><th>薬品名</th><th>使用期限</th><th>数量</th><th>割引率</th><th>入札件数</th><th>推奨</th><th>想定差益率</th></tr>
         </thead>
         <tbody id="today-body"></tbody>
       </table>
@@ -513,84 +380,18 @@
     <div class="empty-state" id="today-inline-empty" style="display:none;padding:20px 0"></div>
   </div>
 
-  <div class="panel" id="bid-list-panel" style="display:none">
-    <div class="today-header">
-      <h2>入札予定リスト(<span id="bid-list-count">0</span>件)</h2>
-      <button type="button" id="copy-list-btn" class="refresh-btn">コピー</button>
-    </div>
-    <div class="today-summary">チェックを入れた医薬品の一覧です。実際の入札はこのサイトでは行わず、下記を参考にリバイバルドラッグのサイトでご自身で入札してください。</div>
-    <div class="hist-scroll">
-      <table class="hist" id="bid-list-table">
-        <thead>
-          <tr><th>薬品名</th><th>数量</th><th>標準ゲルト</th><th>想定差益率</th></tr>
-        </thead>
-        <tbody id="bid-list-body"></tbody>
-      </table>
-    </div>
-  </div>
-
   <div class="search-panel">
     <label for="q">薬品名を入力(部分一致可)</label>
     <div class="search-row">
       <input type="text" id="q" placeholder="例: ネイリン / ねいりん、コレクチム、T-072 など(ひらがな可)" autocomplete="off" disabled>
-      <div class="qty-box"><span>購入単位数</span><input type="number" id="qty" min="1" value="1"></div>
     </div>
     <div class="suggestions" id="suggestions"></div>
-    <div class="tag-select" id="tag-select" style="display:none">
-      <span class="tag-select-label">出品されている割引率タグ</span>
-      <div class="tag-options" id="tag-options"></div>
-    </div>
   </div>
 
   <div class="result" id="result">
     <div class="drug-card">
       <div class="name" id="r-name">-</div>
       <div class="meta-row" id="r-meta"></div>
-      <div id="r-flag"></div>
-    </div>
-
-    <div id="tag-fallback-note"></div>
-    <div id="recency-note" class="today-summary" style="margin:0"></div>
-
-    <div class="tiers">
-      <div class="tier" style="--tc:var(--tier-eco)">
-        <div class="label">経済重視</div>
-        <div class="num" id="t-eco">-</div>
-        <div class="desc">同条件の過去実績の下位25%水準。競合が少なかった回の入札額に相当し、コストは抑えられますが競り負ける可能性もやや高めです。</div>
-        <div class="profit" id="p-eco"></div>
-      </div>
-      <div class="tier" style="--tc:var(--tier-std)">
-        <div class="label">標準</div>
-        <div class="num" id="t-std">-</div>
-        <div class="desc">同条件の過去の入札実績の中央値。最も典型的な落札水準の目安です。</div>
-        <div class="profit" id="p-std"></div>
-      </div>
-      <div class="tier" style="--tc:var(--tier-safe)">
-        <div class="label">堅実重視</div>
-        <div class="num" id="t-safe">-</div>
-        <div class="desc">同条件の過去実績の上位25%水準。これまでの傾向ではほぼ確実に競り勝てていた入札額です。</div>
-        <div class="profit" id="p-safe"></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2>割引率タグ別の実績比較(この商品のみ)</h2>
-      <div class="hist-scroll">
-        <table class="hist" id="tag-breakdown-table">
-          <thead>
-            <tr><th>割引率タグ</th><th>件数</th><th>ゲルト/単位(中央値)</th><th>ゲルト/単位(範囲)</th><th>参考: 真の購入価格÷薬価換算</th></tr>
-          </thead>
-          <tbody id="tag-breakdown-body"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2>直近トレンド</h2>
-      <div class="trend-row">
-        <canvas id="spark" width="280" height="64"></canvas>
-        <div class="trend-copy" id="trend-copy"></div>
-      </div>
     </div>
 
     <div class="panel">
@@ -598,7 +399,7 @@
       <div class="hist-scroll">
         <table class="hist">
           <thead>
-            <tr><th>購入日</th><th>割引率</th><th>単位数</th><th>利用ゲルト</th><th>ゲルト/単位</th><th>薬価換算</th><th>真の購入価格</th><th>薬価差率</th></tr>
+            <tr><th>購入日</th><th>割引率</th><th>単位数</th><th>利用ゲルト</th><th>ゲルト/単位</th><th>薬価換算</th><th>真の購入価格</th><th>薬価差率</th><th>仮の薬価差率</th></tr>
           </thead>
           <tbody id="hist-body"></tbody>
         </table>
@@ -658,7 +459,7 @@ async function loadAll(isManual) {
     uniqueNames = [...new Set(DATA.map(d => d.n))].sort();
     document.getElementById('q').disabled = false;
     if (!firstLoadDone) {
-      document.getElementById('empty-state').textContent = '薬品名を入力すると、推奨ゲルト数がここに表示されます。';
+      document.getElementById('empty-state').textContent = '薬品名を入力すると、過去の購入履歴がここに表示されます。';
       firstLoadDone = true;
     }
     renderStatbar();
@@ -683,60 +484,6 @@ function renderStatbar() {
   `;
 }
 
-// 入札予定リストのチェック状態(この端末のブラウザ内にのみ保存。実際の入札は行わない)
-const CHECKLIST_KEY = 'gerdAdvisorChecklist';
-function loadChecklist() {
-  try {
-    return new Set(JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '[]'));
-  } catch (e) {
-    return new Set();
-  }
-}
-function saveChecklist(set) {
-  try {
-    localStorage.setItem(CHECKLIST_KEY, JSON.stringify([...set]));
-  } catch (e) {
-    // 保存できなくても致命的ではないため無視する
-  }
-}
-let checkedDrugs = loadChecklist();
-
-function renderBidList() {
-  const panel = document.getElementById('bid-list-panel');
-  const body = document.getElementById('bid-list-body');
-  const items = TODAY.filter(r => checkedDrugs.has(r.name));
-  document.getElementById('bid-list-count').textContent = items.length;
-  if (items.length === 0) {
-    panel.style.display = 'none';
-    body.innerHTML = '';
-    return;
-  }
-  panel.style.display = 'block';
-  body.innerHTML = items.map(r => `
-    <tr>
-      <td class="name-cell">${r.name}</td>
-      <td>${r.qty != null ? fmt(r.qty) : '-'}</td>
-      <td>${fmt(r.std)}</td>
-      <td>${r.std_rate != null ? (r.std_rate * 100).toFixed(1) + '%' : '-'}</td>
-    </tr>
-  `).join('');
-}
-
-const copyListBtn = document.getElementById('copy-list-btn');
-copyListBtn.addEventListener('click', () => {
-  const items = TODAY.filter(r => checkedDrugs.has(r.name));
-  const text = items.map(r =>
-    `${r.name}\t数量${fmt(r.qty)}\t標準ゲルト${fmt(r.std)}\t想定差益率${r.std_rate != null ? (r.std_rate * 100).toFixed(1) + '%' : '-'}`
-  ).join('\n');
-  const origLabel = copyListBtn.textContent;
-  navigator.clipboard?.writeText(text).then(() => {
-    copyListBtn.textContent = 'コピーしました';
-    setTimeout(() => { copyListBtn.textContent = origLabel; }, 1500);
-  }).catch(() => {
-    alert('コピーに失敗しました。お使いのブラウザがクリップボード操作に対応していない可能性があります。');
-  });
-});
-
 function renderToday() {
   const tableWrap = document.getElementById('today-table-wrap');
   const inlineEmpty = document.getElementById('today-inline-empty');
@@ -748,7 +495,6 @@ function renderToday() {
     inlineEmpty.textContent = '本日の出品の中に、過去購入履歴のある薬品はまだ見つかっていません。';
     document.getElementById('today-summary').innerHTML = '';
     document.getElementById('today-body').innerHTML = '';
-    renderBidList();
     return;
   }
   inlineEmpty.style.display = 'none';
@@ -761,7 +507,6 @@ function renderToday() {
   const rows = TODAY.slice().sort((a, b) => (b.std_rate ?? -1) - (a.std_rate ?? -1));
   document.getElementById('today-body').innerHTML = rows.map((r, i) => `
     <tr>
-      <td><input type="checkbox" class="bid-check" data-idx="${i}"></td>
       <td class="name-cell"><span class="drug-link" data-idx="${i}">${r.name}</span>${r.fallback ? '<span class="fb-note">(全体実績)</span>' : ''}</td>
       <td>${r.expiry || '-'}</td>
       <td>${r.qty != null ? fmt(r.qty) : '-'}</td>
@@ -778,16 +523,6 @@ function renderToday() {
       document.querySelector('.search-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
-  document.getElementById('today-body').querySelectorAll('.bid-check').forEach(el => {
-    const r = rows[+el.dataset.idx];
-    el.checked = checkedDrugs.has(r.name);
-    el.addEventListener('change', () => {
-      if (el.checked) checkedDrugs.add(r.name); else checkedDrugs.delete(r.name);
-      saveChecklist(checkedDrugs);
-      renderBidList();
-    });
-  });
-  renderBidList();
 }
 
 document.getElementById('refresh-btn').addEventListener('click', () => loadAll(true));
@@ -806,58 +541,17 @@ function parseDate(s) {
   return new Date(+m[1], +m[2]-1, +m[3]);
 }
 
-function quantile(sorted, p) {
-  if (sorted.length === 0) return null;
-  if (sorted.length === 1) return sorted[0];
-  const idx = p * (sorted.length - 1);
-  const lo = Math.floor(idx), hi = Math.ceil(idx);
-  if (lo === hi) return sorted[lo];
-  return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo);
-}
-
 function fmt(n) {
   if (n === null || n === undefined || isNaN(n)) return '-';
   return Math.round(n).toLocaleString();
-}
-
-// interpolated value of `field` at rank-position p, using the SAME ordering
-// (sortedRows) as the gerd/unit quantile so profit figures line up with
-// the actual transactions near that spend level, not an independent quantile.
-function pairedQuantile(sortedRows, field, p) {
-  if (sortedRows.length === 0) return null;
-  if (sortedRows.length === 1) return sortedRows[0][field];
-  const idx = p * (sortedRows.length - 1);
-  const lo = Math.floor(idx), hi = Math.ceil(idx);
-  if (lo === hi) return sortedRows[lo][field];
-  return sortedRows[lo][field] + (sortedRows[hi][field] - sortedRows[lo][field]) * (idx - lo);
 }
 
 function toKatakana(s) {
   return s.replace(/[ぁ-ゖ]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
 }
 
-// 推奨ゲルトの算定は直近1年の実績を優先する。直近1年のサンプルが少ない
-// 場合のみ、日付が新しい順に過去実績を補って最低限のサンプル数を確保する
-// (古いデータは"補助"であり、主役はあくまで直近1年)。
-const RECENT_DAYS = 365;
-const MIN_RECENT_SAMPLE = 5;
-function selectWithRecency(rowsList) {
-  const now = new Date();
-  const withDate = rowsList.map(r => ({ r, dt: parseDate(r.d) }));
-  const recent = withDate.filter(x => x.dt && (now - x.dt) / 86400000 <= RECENT_DAYS).map(x => x.r);
-  if (recent.length >= MIN_RECENT_SAMPLE) return recent;
-  const recentSet = new Set(recent);
-  const older = withDate
-    .filter(x => x.dt && !recentSet.has(x.r))
-    .sort((a, b) => b.dt - a.dt)
-    .map(x => x.r);
-  const supplemented = recent.concat(older.slice(0, Math.max(0, MIN_RECENT_SAMPLE - recent.length)));
-  return supplemented.length ? supplemented : rowsList;
-}
-
 // ---- search / suggestions ----
 const qInput = document.getElementById('q');
-const qtyInput = document.getElementById('qty');
 const sugBox = document.getElementById('suggestions');
 let activeIdx = -1;
 let currentMatches = [];
@@ -907,171 +601,40 @@ function highlight() {
   [...sugBox.querySelectorAll('.item')].forEach((el, i) => el.classList.toggle('active', i === activeIdx));
 }
 
-qtyInput.addEventListener('input', () => { if (qInput.dataset.selected) render(qInput.dataset.selected); });
-
-let selectedTag = null; // null = 全体(タグ指定なし)
-
 function selectDrug(name) {
   qInput.value = name;
   qInput.dataset.selected = name;
   sugBox.classList.remove('open');
-  selectedTag = null;
   render(name);
-}
-
-function renderTagOptions(baseRows) {
-  const tagBox = document.getElementById('tag-select');
-  const opts = document.getElementById('tag-options');
-  const tags = [...new Set(baseRows.map(r => r.disc).filter(t => t !== null && t !== undefined))].sort((a,b) => a-b);
-  if (tags.length === 0) { tagBox.style.display = 'none'; return; }
-  tagBox.style.display = 'flex';
-  const buttons = [`<button type="button" class="tag-btn ${selectedTag===null?'active':''}" data-tag="">全体<span class="n">${baseRows.length}件</span></button>`]
-    .concat(tags.map(t => {
-      const n = baseRows.filter(r => r.disc === t).length;
-      return `<button type="button" class="tag-btn ${selectedTag===t?'active':''}" data-tag="${t}">${t}%<span class="n">${n}件</span></button>`;
-    }));
-  opts.innerHTML = buttons.join('');
-  [...opts.querySelectorAll('.tag-btn')].forEach(btn => {
-    btn.addEventListener('click', () => {
-      const v = btn.dataset.tag;
-      selectedTag = v === '' ? null : +v;
-      render(qInput.dataset.selected);
-    });
-  });
 }
 
 function render(name) {
   const rows = DATA.filter(d => d.n === name).sort((a,b) => (parseDate(a.d)||0) - (parseDate(b.d)||0));
   if (rows.length === 0) {
     document.getElementById('result').classList.remove('open');
-    document.getElementById('tag-select').style.display = 'none';
     document.getElementById('empty-state').style.display = 'block';
     document.getElementById('empty-state').textContent = '過去の購入履歴が見つかりません。薬品名の表記(規格・％表記など)をご確認ください。';
     return;
   }
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('result').classList.add('open');
-  renderTagOptions(rows);
 
   const mk = rows[rows.length-1].mk || '-';
   document.getElementById('r-name').textContent = name;
 
-  const qty = Math.max(1, +qtyInput.value || 1);
-
-  let targetRows = selectedTag === null ? rows : rows.filter(r => r.disc === selectedTag);
-  const fallbackNote = document.getElementById('tag-fallback-note');
-  if (selectedTag !== null && targetRows.length === 0) {
-    fallbackNote.innerHTML = `<div class="flag">この商品は割引率タグ${selectedTag}%での購入実績がありません。以下は全体の実績を表示しています。</div>`;
-    targetRows = rows;
-  } else {
-    fallbackNote.innerHTML = '';
-  }
-
-  const beforeRecencyCount = targetRows.length;
-  const recentCount = targetRows.filter(r => { const dt = parseDate(r.d); return dt && (new Date() - dt) / 86400000 <= RECENT_DAYS; }).length;
-  targetRows = selectWithRecency(targetRows);
-  const recencyNote = document.getElementById('recency-note');
-  if (recentCount >= MIN_RECENT_SAMPLE) {
-    recencyNote.textContent = `直近1年の実績${targetRows.length}件をもとに算出しています。`;
-  } else if (targetRows.length > recentCount) {
-    recencyNote.textContent = `直近1年の実績が${recentCount}件と少ないため、過去の実績で補い${targetRows.length}件で算出しています。`;
-  } else {
-    recencyNote.textContent = beforeRecencyCount > 0 ? `実績${targetRows.length}件すべてが直近1年以内です。` : '';
-  }
-
-  const perUnit = targetRows.filter(r => r.u > 0).map(r => r.g / r.u).sort((a,b) => a-b);
-  const sampleN = perUnit.length;
-
-  const eco = quantile(perUnit, 0.25);
-  const std = quantile(perUnit, 0.50);
-  const safe = quantile(perUnit, 0.75);
-
   document.getElementById('r-meta').innerHTML = `
     <span>メーカー: <b>${mk}</b></span>
-    <span>購入実績: <b>${rows.length}件</b>${selectedTag!==null ? `(うちタグ${selectedTag}%: <b>${targetRows.length}件</b>)` : ''}</span>
+    <span>購入実績: <b>${rows.length}件</b></span>
     <span>最終購入: <b>${rows[rows.length-1].d || '-'}</b></span>
     <span>直近割引率タグ: <b>${rows[rows.length-1].disc ?? '-'}%</b></span>
   `;
-
-  const flagBox = document.getElementById('r-flag');
-  if (sampleN < 3) {
-    flagBox.innerHTML = `<div class="flag">サンプル数が少なく(${sampleN}件)、参考値としての精度は限定的です</div>`;
-  } else {
-    flagBox.innerHTML = '';
-  }
-
-  document.getElementById('t-eco').innerHTML = `${fmt(eco*qty)}<span class="unit">ゲルト</span>`;
-  document.getElementById('t-std').innerHTML = `${fmt(std*qty)}<span class="unit">ゲルト</span>`;
-  document.getElementById('t-safe').innerHTML = `${fmt(safe*qty)}<span class="unit">ゲルト</span>`;
-
-  // 真の薬価差益(想定): 同じ条件の実績を入札ゲルト水準(gu)順に並べ、
-  // その並び順のまま差益額/差益率を補間する(gu単独ではなく実際の取引に紐づいた値を使う)
-  const joint = targetRows
-    .filter(r => r.u > 0 && r.y > 0 && r.p !== null && r.p !== undefined)
-    .map(r => ({ gu: r.g / r.u, profitPerUnit: (r.y - r.p) / r.u, profitRate: (r.y - r.p) / r.y }))
-    .sort((a, b) => a.gu - b.gu);
-
-  function renderProfit(elId, p) {
-    const el = document.getElementById(elId);
-    if (joint.length === 0) { el.innerHTML = ''; return; }
-    const amount = pairedQuantile(joint, 'profitPerUnit', p) * qty;
-    const rate = pairedQuantile(joint, 'profitRate', p) * 100;
-    const sign = amount >= 0 ? '' : '−';
-    el.innerHTML = `<div>想定差益額: <b>${sign}¥${fmt(Math.abs(amount))}</b></div><div>想定差益率(対薬価): <b>${rate.toFixed(1)}%</b></div>`;
-  }
-  renderProfit('p-eco', 0.25);
-  renderProfit('p-std', 0.50);
-  renderProfit('p-safe', 0.75);
-
-  // per-tag breakdown table (always across the whole product, for comparison)
-  const tagBody = document.getElementById('tag-breakdown-body');
-  const tagsAll = [...new Set(rows.map(r => r.disc).filter(t => t !== null && t !== undefined))].sort((a,b) => a-b);
-  tagBody.innerHTML = tagsAll.map(t => {
-    const trows = rows.filter(r => r.disc === t);
-    const tpu = trows.filter(r => r.u > 0).map(r => r.g / r.u).sort((a,b) => a-b);
-    const med = quantile(tpu, 0.5);
-    const lo = tpu.length ? tpu[0] : null, hi = tpu.length ? tpu[tpu.length-1] : null;
-    const ratios = trows.filter(r => r.y > 0 && r.p !== null && r.p !== undefined).map(r => r.p / r.y);
-    const avgRatio = ratios.length ? ratios.reduce((a,b)=>a+b,0) / ratios.length : null;
-    const isSelected = selectedTag === t;
-    return `<tr${isSelected ? ' style="background:var(--surface-alt)"' : ''}>
-      <td><span class="tag">${t}%</span></td>
-      <td>${trows.length}</td>
-      <td>${fmt(med)}</td>
-      <td>${lo!==null ? `${fmt(lo)} 〜 ${fmt(hi)}` : '-'}</td>
-      <td>${avgRatio!==null ? (avgRatio*100).toFixed(0)+'%' : '-'}</td>
-    </tr>`;
-  }).join('');
-
-  // trend: compare recent half vs earlier half (per-unit gerd, chronological), within target tag if possible
-  const trendSource = targetRows.length >= 3 ? targetRows : rows;
-  const chronoPerUnit = trendSource.slice().sort((a,b) => (parseDate(a.d)||0) - (parseDate(b.d)||0))
-    .filter(r => r.u > 0).map(r => ({ d: parseDate(r.d), v: r.g / r.u })).filter(x => x.d);
-  drawSpark(chronoPerUnit.map(x => x.v));
-  const tc = document.getElementById('trend-copy');
-  if (chronoPerUnit.length >= 4) {
-    const half = Math.floor(chronoPerUnit.length / 2);
-    const older = chronoPerUnit.slice(0, half).map(x => x.v);
-    const recent = chronoPerUnit.slice(half).map(x => x.v);
-    const avg = arr => arr.reduce((a,b)=>a+b,0) / arr.length;
-    const oldAvg = avg(older), newAvg = avg(recent);
-    const diff = oldAvg === 0 ? null : (newAvg - oldAvg) / oldAvg * 100;
-    if (diff === null) {
-      tc.innerHTML = `直近の1単位あたり平均ゲルトは ${fmt(newAvg)}`;
-    } else {
-      const dir = diff >= 0 ? 'up' : 'down';
-      const arrow = diff >= 0 ? '&#9650;' : '&#9660;';
-      tc.innerHTML = `直近の1単位あたり平均ゲルトは <b>${fmt(newAvg)}</b>(以前比 <span class="delta ${dir}">${arrow} ${Math.abs(diff).toFixed(0)}%</span>)`;
-    }
-  } else {
-    tc.textContent = 'トレンドを判定するには実績が不足しています。';
-  }
 
   document.getElementById('hist-count').textContent = rows.length;
   const body = document.getElementById('hist-body');
   body.innerHTML = rows.slice().reverse().map(r => {
     const rate = (r.y && r.p !== null && r.p !== undefined) ? (r.y - r.p) / r.y * 100 : null;
     const rateCls = rate === null ? '' : (rate >= 0 ? ' style="color:var(--tier-std)"' : ' style="color:var(--tier-eco)"');
+    const provisionalRate = (r.y && r.p !== null && r.p !== undefined) ? (r.p / 1.1) / r.y * 100 : null;
     return `
     <tr>
       <td>${r.d || '-'}</td>
@@ -1082,68 +645,10 @@ function render(name) {
       <td>${fmt(r.y)}</td>
       <td>${fmt(r.p)}</td>
       <td${rateCls}>${rate === null ? '-' : rate.toFixed(1) + '%'}</td>
+      <td>${provisionalRate === null ? '-' : provisionalRate.toFixed(1) + '%'}</td>
     </tr>
   `;
   }).join('');
-}
-
-function drawSpark(values) {
-  const canvas = document.getElementById('spark');
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  ctx.clearRect(0, 0, W, H);
-  const styles = getComputedStyle(document.documentElement);
-  const accent = styles.getPropertyValue('--tier-std').trim() || '#2f6f63';
-  const border = styles.getPropertyValue('--border').trim() || '#ccc';
-
-  // faint grid
-  ctx.strokeStyle = border;
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 2; i++) {
-    const y = 6 + (H - 12) * (i / 2);
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(W, y);
-    ctx.globalAlpha = 0.5;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-  }
-
-  if (values.length < 2) return;
-  const max = Math.max(...values), min = Math.min(...values);
-  const range = max - min || 1;
-  const pad = 6;
-  const pts = values.map((v, i) => ({
-    x: pad + (W - pad*2) * (i / (values.length - 1)),
-    y: pad + (H - pad*2) * (1 - (v - min) / range)
-  }));
-
-  // area fill
-  const grad = ctx.createLinearGradient(0, 0, 0, H);
-  grad.addColorStop(0, accent + '55');
-  grad.addColorStop(1, accent + '00');
-  ctx.beginPath();
-  ctx.moveTo(pts[0].x, H - pad);
-  pts.forEach(p => ctx.lineTo(p.x, p.y));
-  ctx.lineTo(pts[pts.length-1].x, H - pad);
-  ctx.closePath();
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // line
-  ctx.beginPath();
-  pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-  ctx.strokeStyle = accent;
-  ctx.lineWidth = 2;
-  ctx.lineJoin = 'round';
-  ctx.stroke();
-
-  // emphasized endpoint
-  const last = pts[pts.length-1];
-  ctx.beginPath();
-  ctx.arc(last.x, last.y, 3.5, 0, Math.PI*2);
-  ctx.fillStyle = accent;
-  ctx.fill();
 }
 
 loadAll(false);
