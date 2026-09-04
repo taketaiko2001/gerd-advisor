@@ -634,7 +634,7 @@ function render(name) {
   body.innerHTML = rows.slice().reverse().map(r => {
     const rate = (r.y && r.p !== null && r.p !== undefined) ? (r.y - r.p) / r.y * 100 : null;
     const rateCls = rate === null ? '' : (rate >= 0 ? ' style="color:var(--tier-std)"' : ' style="color:var(--tier-eco)"');
-    const provisionalRate = (r.y && r.p !== null && r.p !== undefined) ? (r.p / 1.1) / r.y * 100 : null;
+    const provisionalRate = (r.y && r.p !== null && r.p !== undefined) ? 100 - (r.p / 1.1) / r.y * 100 : null;
     return `
     <tr>
       <td>${r.d || '-'}</td>
